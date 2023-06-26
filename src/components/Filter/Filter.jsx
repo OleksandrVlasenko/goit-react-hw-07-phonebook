@@ -3,12 +3,13 @@ import shortid from 'shortid';
 
 import { FilterField } from './Filter.styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeFilter } from 'redux/phonebookSlice';
+import { changeFilter } from 'redux/filterSlice';
+import { selectFilter } from 'redux/selectors';
 
 const filterId = shortid.generate();
 
 export const Filter = () => {
-  const filter = useSelector(state => state.phonebook.filter);
+  const filter = useSelector(selectFilter);
   const dispatch = useDispatch();
 
   const handleChange = e => {

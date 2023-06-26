@@ -4,7 +4,8 @@ import Notiflix from 'notiflix';
 
 import { Form } from './ContactForm.styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from 'redux/phonebookSlice';
+import { addContact } from 'redux/operations';
+import { selectContacts } from 'redux/selectors';
 
 const nameId = shortid.generate();
 const numberId = shortid.generate();
@@ -13,7 +14,7 @@ export const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  const contacts = useSelector(state => state.phonebook.contacts);
+  const contacts = useSelector(selectContacts);
   const dispatch = useDispatch();
 
   const handleChange = e => {
@@ -33,12 +34,13 @@ export const ContactForm = () => {
   };
 
   const equalContacts = () => {
-    return contacts.find(contact => contact.name.toLowerCase() === name);
+    return contacts.find(
+      contact => contact.name.toLowerCase() === name.toLowerCase()
+    );
   };
 
   const addNewContact = (name, number) => {
     const newContact = {
-      id: shortid.generate(),
       name,
       number,
     };

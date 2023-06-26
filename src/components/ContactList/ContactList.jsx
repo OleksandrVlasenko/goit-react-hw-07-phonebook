@@ -3,36 +3,30 @@ import { Contact } from 'components/Contact/Contact';
 
 import { Contacts, InfoMessage } from './ContactList.styled';
 import { useSelector } from 'react-redux';
+import {
+  selectContacts,
+  selectFilteredContacts,
+  selectIsLoading,
+} from 'redux/selectors';
 
 export const ContactList = () => {
-  const contacts = useSelector(state => state.phonebook.contacts);
-  const filter = useSelector(state => state.phonebook.filter);
+  const isLoading = useSelector(selectIsLoading);
 
-  const filteredContacts = () => {
-    return contacts.filter(({ name }) =>
-      name.toLowerCase().includes(filter.toLowerCase().trim())
-    );
-  };
-
-  const filteredContactsList = filteredContacts();
+  const filteredContacts = useSelector(selectFilteredContacts);
+  const contacts = useSelector(selectContacts);
 
   return (
     <Contacts>
-      {contacts.length === 0 ? (
+      <ul>
+        {filteredContacts.map(({ id, name, number }) => (
+          <Contact key={id} id={id} name={name} number={number} />
+        ))}
+      </ul>
+      {contacts.length === 0 && !isLoading ? (
         <InfoMessage>The list of contacts is empty</InfoMessage>
-      ) : filteredContactsList.length === 0 ? (
-        <InfoMessage>Nothing found</InfoMessage>
       ) : (
-        <ul>
-          {filteredContactsList.map(({ id, name, number }) => (
-            <Contact
-              key={id}
-              id={id}
-              name={name}
-              number={number}
-            />
-          ))}
-        </ul>
+        filteredContacts.length === 0 &&
+        !isLoading && <InfoMessage>Nothing found</InfoMessage>
       )}
     </Contacts>
   );
